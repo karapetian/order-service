@@ -1,14 +1,11 @@
 package com.imeasystems.orderservice.customer.dto;
 
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class CreateCustomerDto {
-
+    @NotNull
     private String name;
 
     private String surname;

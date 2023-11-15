@@ -1,10 +1,10 @@
-package com.imeasystems.orderservice.order.controller;
+package com.imeasystems.orderservice.customer.controller;
 
-import com.imeasystems.orderservice.order.dto.CreateOrderDto;
-import com.imeasystems.orderservice.order.dto.OrderDto;
-import com.imeasystems.orderservice.order.dto.OrderResponse;
-import com.imeasystems.orderservice.order.dto.UpdateOrderDto;
-import com.imeasystems.orderservice.order.service.OrderService;
+import com.imeasystems.orderservice.customer.dto.CreateCustomerDto;
+import com.imeasystems.orderservice.customer.dto.CustomerDto;
+import com.imeasystems.orderservice.customer.dto.CustomerResponse;
+import com.imeasystems.orderservice.customer.dto.UpdateCustomerDto;
+import com.imeasystems.orderservice.customer.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,65 +26,65 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/orders")
-public class OrderController {
+@RequestMapping("/api/v1/customers")
+public class CustomerController {
 
     public static final String ID = "id";
 
-    private final OrderService orderService;
+    private final CustomerService customerService;
 
-    @Operation(summary = "Create order")
+    @Operation(summary = "Create customer")
     @PostMapping
-    public ResponseEntity<OrderDto> createOrder(
-            @NotNull @RequestBody final CreateOrderDto createOrderDto) {
-        OrderDto order = orderService.createOrder(createOrderDto);
+    public ResponseEntity<CustomerDto> createCustomer(
+            @Valid @NotNull @RequestBody final CreateCustomerDto createCustomerDto) {
+        CustomerDto customer = customerService.createCustomer(createCustomerDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(order);
+                .body(customer);
     }
 
-    @Operation(summary = "Get order by id")
+    @Operation(summary = "Get customer by id")
     @GetMapping("/{id}")
-    public ResponseEntity<OrderDto> getOrder(@NotNull @Positive @PathVariable final Long id) {
-        OrderDto orderDto = orderService.getOrder(id);
+    public ResponseEntity<CustomerDto> getCustomer(@NotNull @Positive @PathVariable final Long id) {
+        CustomerDto customerDto = customerService.getCustomer(id);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(orderDto);
+                .body(customerDto);
     }
-    @Operation(summary = "Get all orders, Adjust default params - page(0), size(10), sort(ASC)")
+    @Operation(summary = "Get all customers, Adjust default params - page(0), size(10), sort(ASC)")
     @GetMapping
-    public ResponseEntity<OrderResponse> getAllOrders(
+    public ResponseEntity<CustomerResponse> getAllCustomers(
             @RequestParam(value = "page", defaultValue = "0") @Valid @Min(0) int page,
             @RequestParam(value = "size", defaultValue = "10") @Valid @Positive @Min(1) int size,
             @RequestParam(value = "sort", defaultValue = "ASC") String sort
     ) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.fromString(sort), ID);
-        OrderResponse orderResponse = orderService.getAllOrders(pageRequest);
+        CustomerResponse customerResponse = customerService.getAllCustomers(pageRequest);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(orderResponse);
+                .body(customerResponse);
     }
 
-    @Operation(summary = "Update order by id")
+    @Operation(summary = "Update customer by id")
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateOrder(
+    public ResponseEntity<Void> updateCustomer(
             @Valid @NotNull @Positive @PathVariable final Long id,
-            @Valid @NotNull @RequestBody final UpdateOrderDto updateOrderDto) {
-        orderService.updateOrder(id, updateOrderDto);
+            @Valid @NotNull @RequestBody final UpdateCustomerDto updateCustomerDto) {
+        customerService.updateCustomer(id, updateCustomerDto);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();
     }
 
-    @Operation(summary = "Delete order by id")
+    @Operation(summary = "Delete customer by id")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrder(@Valid @NotNull @Positive @PathVariable final Long id) {
-        orderService.deleteOrder(id);
-
+    public ResponseEntity<Void> deleteCustomer(@Valid @NotNull @Positive @PathVariable final Long id) {
+        customerService.deleteCustomer(id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();

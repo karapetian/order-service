@@ -1,5 +1,7 @@
 server:
   port: 8090
+  servlet:
+    context-path: /imea-systems
 spring:
   application:
     name: ${SERVICE_NAME:order-service}
@@ -13,6 +15,8 @@ spring:
       enabled: true
       path: /h2-console
   jpa:
+    hibernate:
+      ddl-auto: update
     database-platform: org.hibernate.dialect.H2Dialect
     properties:
       hibernate:
@@ -21,7 +25,7 @@ spring:
 
 logging:
   level:
-    root: debug
+    root: INFO
     org:
       hibernate:
-        type: trace
+        type: DEBUG
