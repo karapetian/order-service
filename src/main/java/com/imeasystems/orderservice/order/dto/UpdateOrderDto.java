@@ -22,8 +22,6 @@ public class UpdateOrderDto {
 
     private String paymentDetails;
 
-    private LocalDateTime orderCreationDate;
-
     private LocalDateTime paymentDate;
 
     private LocalDateTime shippedDate;
