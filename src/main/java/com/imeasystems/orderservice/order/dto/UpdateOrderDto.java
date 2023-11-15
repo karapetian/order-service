@@ -1,6 +1,6 @@
-package com.imeasystems.orderservice.dto;
+package com.imeasystems.orderservice.order.dto;
 
-import com.imeasystems.orderservice.util.OrderStatus;
+import com.imeasystems.orderservice.order.util.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

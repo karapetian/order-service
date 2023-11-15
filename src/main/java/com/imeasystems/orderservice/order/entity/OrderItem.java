@@ -1,4 +1,4 @@
-package com.imeasystems.orderservice.entity;
+package com.imeasystems.orderservice.order.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

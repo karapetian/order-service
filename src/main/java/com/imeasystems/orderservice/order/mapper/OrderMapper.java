@@ -1,8 +1,8 @@
-package com.imeasystems.orderservice.mapper;
+package com.imeasystems.orderservice.order.mapper;
 
-import com.imeasystems.orderservice.dto.CreateOrderDto;
-import com.imeasystems.orderservice.dto.OrderDto;
-import com.imeasystems.orderservice.entity.Order;
+import com.imeasystems.orderservice.order.dto.CreateOrderDto;
+import com.imeasystems.orderservice.order.dto.OrderDto;
+import com.imeasystems.orderservice.order.entity.Order;
 import org.mapstruct.Mapper;
 
 import java.util.List;

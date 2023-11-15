@@ -1,9 +1,9 @@
-package com.imeasystems.orderservice.service;
+package com.imeasystems.orderservice.order.service;
 
-import com.imeasystems.orderservice.dto.CreateOrderDto;
-import com.imeasystems.orderservice.dto.OrderDto;
-import com.imeasystems.orderservice.dto.OrderResponse;
-import com.imeasystems.orderservice.dto.UpdateOrderDto;
+import com.imeasystems.orderservice.order.dto.CreateOrderDto;
+import com.imeasystems.orderservice.order.dto.OrderDto;
+import com.imeasystems.orderservice.order.dto.OrderResponse;
+import com.imeasystems.orderservice.order.dto.UpdateOrderDto;
 import org.springframework.data.domain.PageRequest;
 
 public interface OrderService {

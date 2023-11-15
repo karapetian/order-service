@@ -1,6 +1,7 @@
-package com.imeasystems.orderservice.entity;
+package com.imeasystems.orderservice.order.entity;
 
-import com.imeasystems.orderservice.util.OrderStatus;
+import com.imeasystems.orderservice.customer.entity.Customer;
+import com.imeasystems.orderservice.order.util.OrderStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

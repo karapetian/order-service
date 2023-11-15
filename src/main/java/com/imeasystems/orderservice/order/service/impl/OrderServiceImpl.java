@@ -1,13 +1,14 @@
-package com.imeasystems.orderservice.service.impl;
+package com.imeasystems.orderservice.order.service.impl;
 
-import com.imeasystems.orderservice.dto.CreateOrderDto;
-import com.imeasystems.orderservice.dto.OrderDto;
-import com.imeasystems.orderservice.dto.OrderResponse;
-import com.imeasystems.orderservice.dto.UpdateOrderDto;
-import com.imeasystems.orderservice.entity.Order;
-import com.imeasystems.orderservice.mapper.OrderMapper;
-import com.imeasystems.orderservice.repository.OrderRepository;
-import com.imeasystems.orderservice.service.OrderService;
+import com.imeasystems.orderservice.order.dto.CreateOrderDto;
+import com.imeasystems.orderservice.order.dto.OrderDto;
+import com.imeasystems.orderservice.order.dto.OrderResponse;
+import com.imeasystems.orderservice.order.dto.UpdateOrderDto;
+import com.imeasystems.orderservice.order.entity.Order;
+import com.imeasystems.orderservice.order.mapper.OrderMapper;
+import com.imeasystems.orderservice.order.repository.OrderRepository;
+import com.imeasystems.orderservice.order.service.OrderService;
+import com.imeasystems.orderservice.order.util.OrderStatus;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,7 +30,8 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public OrderDto createOrder(CreateOrderDto createOrderDto) {
-        final Order order = orderMapper.createOrderDtoToOrder(createOrderDto);
+        Order order = orderMapper.createOrderDtoToOrder(createOrderDto);
+        order.setStatus(OrderStatus.PENDING);
         return orderMapper.orderToOrderDto(orderRepository.save(order));
     }
 
@@ -41,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderResponse getAllOrders(PageRequest pageRequest) {
         Page<Order> orderPage = orderRepository.findAll(pageRequest);
-        final List<OrderDto> orderDtos = orderMapper.orderListToOrderDtoList(orderPage.getContent());
+        List<OrderDto> orderDtos = orderMapper.orderListToOrderDtoList(orderPage.getContent());
 
         return OrderResponse.builder()
                 .totalItems(orderPage.getTotalElements())
@@ -84,8 +86,8 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public void deleteOrder(Long id) {
-        Order document = findOrderById(id);
-        orderRepository.delete(document);
+        Order customer = findOrderById(id);
+        orderRepository.delete(customer);
     }
 
     private Order findOrderById(Long id) {

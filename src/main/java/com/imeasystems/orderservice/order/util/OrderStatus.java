@@ -1,4 +1,4 @@
-package com.imeasystems.orderservice.util;
+package com.imeasystems.orderservice.order.util;
 
 public enum OrderStatus {
 

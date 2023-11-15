@@ -1,10 +1,10 @@
-package com.imeasystems.orderservice.controller;
+package com.imeasystems.orderservice.order.controller;
 
-import com.imeasystems.orderservice.dto.CreateOrderDto;
-import com.imeasystems.orderservice.dto.OrderDto;
-import com.imeasystems.orderservice.dto.OrderResponse;
-import com.imeasystems.orderservice.dto.UpdateOrderDto;
-import com.imeasystems.orderservice.service.OrderService;
+import com.imeasystems.orderservice.order.dto.CreateOrderDto;
+import com.imeasystems.orderservice.order.dto.OrderDto;
+import com.imeasystems.orderservice.order.dto.OrderResponse;
+import com.imeasystems.orderservice.order.dto.UpdateOrderDto;
+import com.imeasystems.orderservice.order.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -47,7 +47,7 @@ public class OrderController {
     @Operation(summary = "Get order by id")
     @GetMapping("/{id}")
     public ResponseEntity<OrderDto> getOrder(@NotNull @Positive @PathVariable final Long id) {
-        final OrderDto orderDto = orderService.getOrder(id);
+        OrderDto orderDto = orderService.getOrder(id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(orderDto);
@@ -59,9 +59,8 @@ public class OrderController {
             @RequestParam(value = "size", defaultValue = "10") @Valid @Positive @Min(1) int size,
             @RequestParam(value = "sort", defaultValue = "ASC") String sort
     ) {
-        final PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.fromString(sort),
-                ID);
-        final OrderResponse orderResponse = orderService.getAllOrders(pageRequest);
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.fromString(sort), ID);
+        OrderResponse orderResponse = orderService.getAllOrders(pageRequest);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

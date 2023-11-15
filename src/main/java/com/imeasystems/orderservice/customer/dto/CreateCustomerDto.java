@@ -1,4 +1,4 @@
-package com.imeasystems.orderservice.dto;
+package com.imeasystems.orderservice.customer.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomerDto {
-
-    private Long id;
+public class CreateCustomerDto {
 
     private String name;
 

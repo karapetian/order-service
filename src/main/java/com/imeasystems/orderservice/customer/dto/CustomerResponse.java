@@ -1,4 +1,4 @@
-package com.imeasystems.orderservice.dto;
+package com.imeasystems.orderservice.customer.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,11 +14,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OrderResponse {
+public class CustomerResponse {
 
     private long totalItems;
 
-    private List<OrderDto> orders = new ArrayList<>();
+    private List<CustomerDto> customers = new ArrayList<>();
 
     private long totalPages;
 
