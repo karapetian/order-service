@@ -1,4 +1,8 @@
 package com.imeasystems.orderservice.repository;
 
-public interface OrderRepository {
+import com.imeasystems.orderservice.entity.Order;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface OrderRepository extends JpaRepository<Order, Long> {
+
 }
