@@ -7,8 +7,8 @@ spring:
     name: ${SERVICE_NAME:order-service}
   datasource:
     url: jdbc:h2:mem:imeasystems
-    username: test
-    password: 1234
+    username: sa
+    password: Strong.Pwd-123
     driverClassName: org.h2.Driver
   h2:
     console:

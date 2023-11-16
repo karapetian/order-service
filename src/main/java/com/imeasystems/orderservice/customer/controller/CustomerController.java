@@ -48,12 +48,13 @@ public class CustomerController {
 
     @Operation(summary = "Get customer by id")
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerDto> getCustomer(@NotNull @Positive @PathVariable final Long id) {
+    public ResponseEntity<CustomerDto> getCustomer(@Valid @NotNull @Positive @PathVariable final Long id) {
         CustomerDto customerDto = customerService.getCustomer(id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(customerDto);
     }
+
     @Operation(summary = "Get all customers, Adjust default params - page(0), size(10), sort(ASC)")
     @GetMapping
     public ResponseEntity<CustomerResponse> getAllCustomers(

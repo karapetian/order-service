@@ -1,5 +1,7 @@
 package com.imeasystems.orderservice.order.service.impl;
 
+import com.imeasystems.orderservice.customer.entity.Customer;
+import com.imeasystems.orderservice.customer.repository.CustomerRepository;
 import com.imeasystems.orderservice.order.dto.CreateOrderDto;
 import com.imeasystems.orderservice.order.dto.OrderDto;
 import com.imeasystems.orderservice.order.dto.OrderResponse;
@@ -24,6 +26,8 @@ import java.util.Objects;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
+
+    private final CustomerRepository customerRepository;
     
     private final OrderMapper orderMapper;
     
@@ -31,6 +35,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto createOrder(CreateOrderDto createOrderDto) {
         Order order = orderMapper.createOrderDtoToOrder(createOrderDto);
+
+        Customer customer = customerRepository.findById(createOrderDto.getCustomerId())
+                .orElseThrow(() -> new EntityNotFoundException("Customer with id " + createOrderDto.getCustomerId() + " not found"));
+
+        order.setCustomer(customer);
         order.setStatus(OrderStatus.PENDING);
         return orderMapper.orderToOrderDto(orderRepository.save(order));
     }
@@ -59,7 +68,8 @@ public class OrderServiceImpl implements OrderService {
         Order order = findOrderById(id);
 
         if (Objects.nonNull(updateOrderDto.getCustomerId())) {
-            // getCustomer
+            Customer customer = customerRepository.getReferenceById(updateOrderDto.getCustomerId());
+            order.setCustomer(customer);
         }
         if (Objects.nonNull(updateOrderDto.getStatus())) {
             order.setStatus(updateOrderDto.getStatus());
