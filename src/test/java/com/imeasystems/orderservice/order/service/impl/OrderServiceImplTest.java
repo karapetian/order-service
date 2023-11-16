@@ -22,6 +22,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -178,7 +179,7 @@ class OrderServiceImplTest {
     }
 
     private OrderDto buildOrderDto1() {
-        return new OrderDto(ORDER_ID, buildCustomerDto(), OrderStatus.PENDING, ADDRESS,
+        return new OrderDto(ORDER_ID, buildCustomerDto(), OrderStatus.PENDING, Collections.emptyList(), ADDRESS,
                 DETAILS, null, null, null, null);
     }
 
@@ -196,7 +197,8 @@ class OrderServiceImplTest {
     }
 
     private UpdateOrderDto buildUpdateOrderDto() {
-        return new UpdateOrderDto(CUSTOMER_ID, OrderStatus.PENDING, ADDRESS, DETAILS, null, null, null);
+        return new UpdateOrderDto(CUSTOMER_ID, OrderStatus.PENDING, Collections.emptyList(), ADDRESS,
+                DETAILS, null, null, null);
     }
 
     private CustomerDto buildCustomerDto() {

@@ -1,9 +1,13 @@
 package com.imeasystems.orderservice.order.dto;
 
+import com.imeasystems.orderservice.order.dto.orderitem.CreateOrderItemDto;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -13,7 +17,8 @@ public class CreateOrderDto {
     @NotNull
     private Long customerId;
 
-//    private List<OrderItem> orderItems;
+    @NotEmpty
+    private List<CreateOrderItemDto> orderItems;
 
     @NotNull
     private String shippingAddress;

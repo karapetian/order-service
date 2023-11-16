@@ -6,8 +6,12 @@ import com.imeasystems.orderservice.order.dto.CreateOrderDto;
 import com.imeasystems.orderservice.order.dto.OrderDto;
 import com.imeasystems.orderservice.order.dto.OrderResponse;
 import com.imeasystems.orderservice.order.dto.UpdateOrderDto;
+import com.imeasystems.orderservice.order.dto.orderitem.OrderItemDto;
 import com.imeasystems.orderservice.order.entity.Order;
+import com.imeasystems.orderservice.order.entity.OrderItem;
+import com.imeasystems.orderservice.order.mapper.OrderItemMapper;
 import com.imeasystems.orderservice.order.mapper.OrderMapper;
+import com.imeasystems.orderservice.order.repository.OrderItemRepository;
 import com.imeasystems.orderservice.order.repository.OrderRepository;
 import com.imeasystems.orderservice.order.service.OrderService;
 import com.imeasystems.orderservice.order.util.OrderStatus;
@@ -28,12 +32,17 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
 
     private final CustomerRepository customerRepository;
+
+    private final OrderItemRepository orderItemRepository;
     
     private final OrderMapper orderMapper;
-    
+
+    private final OrderItemMapper orderItemMapper;
+
     @Transactional
     @Override
     public OrderDto createOrder(CreateOrderDto createOrderDto) {
+        //save order
         Order order = orderMapper.createOrderDtoToOrder(createOrderDto);
 
         Customer customer = customerRepository.findById(createOrderDto.getCustomerId())
@@ -41,7 +50,18 @@ public class OrderServiceImpl implements OrderService {
 
         order.setCustomer(customer);
         order.setStatus(OrderStatus.PENDING);
-        return orderMapper.orderToOrderDto(orderRepository.save(order));
+        Order savedOrder = orderRepository.save(order);
+
+        //save orderItems
+        List<OrderItem> orderItems = order.getOrderItems();
+        orderItems.forEach(item -> item.setOrder(savedOrder));
+        List<OrderItem> savedItems = orderItemRepository.saveAll(orderItems);
+
+        //map to dtos
+        List<OrderItemDto> itemDtos = orderItemMapper.orderItemListToOrderItemDtoList(savedItems);
+        OrderDto orderDto = orderMapper.orderToOrderDto(savedOrder);
+        orderDto.setOrderItems(itemDtos);
+        return orderDto;
     }
 
     @Override
