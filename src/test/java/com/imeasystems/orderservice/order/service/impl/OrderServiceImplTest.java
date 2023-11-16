@@ -8,7 +8,10 @@ import com.imeasystems.orderservice.order.dto.OrderDto;
 import com.imeasystems.orderservice.order.dto.OrderResponse;
 import com.imeasystems.orderservice.order.dto.UpdateOrderDto;
 import com.imeasystems.orderservice.order.entity.Order;
+import com.imeasystems.orderservice.order.entity.OrderItem;
+import com.imeasystems.orderservice.order.mapper.OrderItemMapper;
 import com.imeasystems.orderservice.order.mapper.OrderMapper;
+import com.imeasystems.orderservice.order.repository.OrderItemRepository;
 import com.imeasystems.orderservice.order.repository.OrderRepository;
 import com.imeasystems.orderservice.order.util.OrderStatus;
 import jakarta.persistence.EntityNotFoundException;
@@ -44,10 +47,16 @@ class OrderServiceImplTest {
     private OrderRepository orderRepository;
 
     @Mock
+    private OrderItemRepository orderItemRepository;
+
+    @Mock
     private CustomerRepository customerRepository;
 
     @Mock
     private OrderMapper orderMapper;
+
+    @Mock
+    private OrderItemMapper orderItemMapper;
 
     private static final Long ORDER_ID = 90001L;
 
@@ -65,15 +74,21 @@ class OrderServiceImplTest {
         createOrderDto.setCustomerId(CUSTOMER_ID);
 
         Order order = new Order();
+        Order savedOrder = new Order();
         Customer customer = new Customer();
+        OrderDto result = new OrderDto();
 
         when(orderMapper.createOrderDtoToOrder(createOrderDto)).thenReturn(order);
         when(customerRepository.findById(CUSTOMER_ID)).thenReturn(Optional.of(customer));
+        when(orderRepository.save(order)).thenReturn(savedOrder);
+        when(orderMapper.orderToOrderDto(savedOrder)).thenReturn(result);
 
         orderService.createOrder(createOrderDto);
 
         verify(orderMapper, times(1)).createOrderDtoToOrder(createOrderDto);
         verify(orderRepository, times(1)).save(order);
+        verify(orderItemRepository, times(1)).saveAll(any(List.class));
+        verify(customerRepository, times(1)).findById(CUSTOMER_ID);
     }
 
     @Test

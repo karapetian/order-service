@@ -90,7 +90,7 @@ class CustomerControllerIntegrationTest {
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, createResponse.getStatusCode());
         assertTrue(createResponse.hasBody());
         assertTrue(createResponse.getBody().containsKey("phoneNumber"));
-        assertEquals("must match \"^\\+{0,1}[0-9]{8,}$\"", createResponse.getBody().get("phoneNumber"));
+        assertEquals("must match \"^\\+{0,1}[0-9]{8,20}$\"", createResponse.getBody().get("phoneNumber"));
     }
 
     @Test
