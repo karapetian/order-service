@@ -34,6 +34,7 @@ public class Customer {
     private String email;
 
     @NotNull
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     @OneToMany(mappedBy = "customer")

@@ -1,6 +1,8 @@
 package com.imeasystems.orderservice.order.service.impl;
 
 import com.imeasystems.orderservice.customer.dto.CustomerDto;
+import com.imeasystems.orderservice.customer.entity.Customer;
+import com.imeasystems.orderservice.customer.repository.CustomerRepository;
 import com.imeasystems.orderservice.order.dto.CreateOrderDto;
 import com.imeasystems.orderservice.order.dto.OrderDto;
 import com.imeasystems.orderservice.order.dto.OrderResponse;
@@ -41,6 +43,9 @@ class OrderServiceImplTest {
     private OrderRepository orderRepository;
 
     @Mock
+    private CustomerRepository customerRepository;
+
+    @Mock
     private OrderMapper orderMapper;
 
     private static final Long ORDER_ID = 90001L;
@@ -53,9 +58,16 @@ class OrderServiceImplTest {
 
     @Test
     void createOrderSuccessTest() {
+        CustomerDto customerDto = new CustomerDto();
+        customerDto.setId(CUSTOMER_ID);
         CreateOrderDto createOrderDto = new CreateOrderDto();
+        createOrderDto.setCustomerId(CUSTOMER_ID);
+
         Order order = new Order();
+        Customer customer = new Customer();
+
         when(orderMapper.createOrderDtoToOrder(createOrderDto)).thenReturn(order);
+        when(customerRepository.findById(CUSTOMER_ID)).thenReturn(Optional.of(customer));
 
         orderService.createOrder(createOrderDto);
 
