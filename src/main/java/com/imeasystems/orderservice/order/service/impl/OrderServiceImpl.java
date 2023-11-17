@@ -132,7 +132,7 @@ public class OrderServiceImpl implements OrderService {
     public void deleteOrder(Long id) {
         Order customer = findOrderById(id);
         orderRepository.delete(customer);
-        log.info("Successfully deleted Order with id:{}", id);
+        log.info("Successfully deleted Order and OrderItems with orderId:{}", id);
     }
 
     private Order findOrderById(Long id) {
