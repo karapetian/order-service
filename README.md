@@ -8,6 +8,16 @@ Unit tests and integration test is present.
 The main domain is the Order object.  
 There are also Customer and OrderItem.  
 
+## How to Run?
+1. Run through IntelliJ IDEA
+
+2. From the root directory run _mvn clean install_     
+After the successful build run _java -jar target/order-service.jar_   
+
+3. When building the application docker plugin will generate a docker image from the Dockerfile.   
+After the successful build from the root directory run the image with _docker-compose up_   
+Container's 8090 port will be mapped to th 8090 on the host machine. 
+
 ## DB
 H2 console: http://localhost:8090/imea-systems/h2-console   
 JDBC URL: jdbc:h2:mem:imeasystems     

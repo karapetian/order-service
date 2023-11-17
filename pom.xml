@@ -64,6 +64,7 @@
     </dependencies>
 
     <build>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -97,6 +98,33 @@
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>docker-maven-plugin</artifactId>
+                <groupId>io.fabric8</groupId>
+                <version>0.40.1</version>
+                <configuration>
+                    <verbose>true</verbose>
+                    <removeMode>all</removeMode>
+                    <images>
+                        <image>
+                            <name>${project.artifactId}:${project.version}</name>
+                            <build>
+                                <dockerFileDir>${project.basedir}</dockerFileDir>
+                                <cleanup>try</cleanup>
+                            </build>
+                        </image>
+                    </images>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>start</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

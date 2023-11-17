@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  order:
+    platform: linux/amd64
+    image: order-service:0.0.1-SNAPSHOT
+    hostname: order
+    restart: always
+    container_name: order-service
+    ports:
+      - "8090:8090"
+    expose:
+      - "8090"

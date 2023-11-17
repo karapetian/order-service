@@ -1,6 +1,6 @@
-FROM --platform=linux/amd64 public.ecr.aws/docker/library/eclipse-temurin:17-jdk-alpine as builder
+FROM --platform=linux/amd64 public.ecr.aws/docker/library/eclipse-temurin:17-jdk-alpine AS builder
 WORKDIR application
-ARG JAR_FILE=target/order-service-0.0.1-SNAPSHOT.jar
+ARG JAR_FILE=target/order-service.jar
 COPY ${JAR_FILE} application.jar
 RUN java -Djarmode=layertools -jar application.jar extract
 
