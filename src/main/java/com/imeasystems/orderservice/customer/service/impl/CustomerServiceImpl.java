@@ -10,6 +10,7 @@ import com.imeasystems.orderservice.customer.repository.CustomerRepository;
 import com.imeasystems.orderservice.customer.service.CustomerService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
@@ -30,6 +32,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDto createCustomer(CreateCustomerDto createCustomerDto) {
         Customer customer = customerMapper.createCustomerDtoToCustomer(createCustomerDto);
+        log.info("Successfully created new Customer: {}", customer);
         return customerMapper.customerToCustomerDto(customerRepository.save(customer));
     }
 
