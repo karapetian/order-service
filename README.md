@@ -10,6 +10,7 @@ There are also Customer and OrderItem.
 
 ## DB
 H2 console: http://localhost:8090/imea-systems/h2-console   
+JDBC URL: jdbc:h2:mem:imeasystems     
 username: sa        
 password: Strong.Pwd-123
 
