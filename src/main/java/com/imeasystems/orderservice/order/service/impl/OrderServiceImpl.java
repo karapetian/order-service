@@ -17,14 +17,17 @@ import com.imeasystems.orderservice.order.service.OrderService;
 import com.imeasystems.orderservice.order.util.OrderStatus;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -61,6 +64,7 @@ public class OrderServiceImpl implements OrderService {
         List<OrderItemDto> itemDtos = orderItemMapper.orderItemListToOrderItemDtoList(savedItems);
         OrderDto orderDto = orderMapper.orderToOrderDto(savedOrder);
         orderDto.setOrderItems(itemDtos);
+        log.info("Successfully created Order: {}", orderDto);
         return orderDto;
     }
 
@@ -85,8 +89,17 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public void updateOrder(Long id, UpdateOrderDto updateOrderDto) {
+        log.info("Updating Order with id:{}", id);
         Order order = findOrderById(id);
 
+        if (!CollectionUtils.isEmpty(updateOrderDto.getOrderItems())) {
+            int count = orderItemRepository.deleteAllByOrderId(id);
+            log.info("{} OrderItems were deleted with orderId:{}", count, id);
+            List<OrderItem> orderItems = orderItemMapper.updateOrderItemDtoListToOrderItemList(updateOrderDto.getOrderItems());
+            orderItems.forEach(item -> item.setOrder(order));
+            orderItemRepository.saveAll(orderItems);
+            log.info("New OrderItems saved for Order with orderId:{}", id);
+        }
         if (Objects.nonNull(updateOrderDto.getCustomerId())) {
             Customer customer = customerRepository.getReferenceById(updateOrderDto.getCustomerId());
             order.setCustomer(customer);
@@ -111,6 +124,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         orderRepository.save(order);
+        log.info("Successfully updated Order with id:{}", id);
     }
 
     @Transactional
@@ -118,6 +132,7 @@ public class OrderServiceImpl implements OrderService {
     public void deleteOrder(Long id) {
         Order customer = findOrderById(id);
         orderRepository.delete(customer);
+        log.info("Successfully deleted Order with id:{}", id);
     }
 
     private Order findOrderById(Long id) {

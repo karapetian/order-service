@@ -42,6 +42,7 @@ public class ApiExceptionHandler {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
+        log.error("MethodArgumentNotValidException: {}", errors);
         return ResponseEntity.status(UNPROCESSABLE_ENTITY).body(errors);
     }
 
@@ -55,14 +56,15 @@ public class ApiExceptionHandler {
             messages.add(message);
         }
         response.put("errors", messages);
+        log.error("ConstraintViolationException: {}", response);
         return ResponseEntity.status(BAD_REQUEST).body(response);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<List<String>> handleDataIntegrityViolationException(
         DataIntegrityViolationException ex) {
-        log.error("DataIntegrityViolation Exception occurred", ex);
         String message = ex.getCause().getCause().getMessage();
+        log.error("DataIntegrityViolationException: {}", message);
         return ResponseEntity.status(BAD_REQUEST).body(Collections.singletonList(message));
     }
 

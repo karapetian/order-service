@@ -7,6 +7,7 @@ import com.imeasystems.orderservice.order.dto.CreateOrderDto;
 import com.imeasystems.orderservice.order.dto.OrderDto;
 import com.imeasystems.orderservice.order.dto.OrderResponse;
 import com.imeasystems.orderservice.order.dto.UpdateOrderDto;
+import com.imeasystems.orderservice.order.dto.orderitem.UpdateOrderItemDto;
 import com.imeasystems.orderservice.order.entity.Order;
 import com.imeasystems.orderservice.order.entity.OrderItem;
 import com.imeasystems.orderservice.order.mapper.OrderItemMapper;
@@ -163,6 +164,28 @@ class OrderServiceImplTest {
 
         verify(orderRepository, times(1)).findById(ORDER_ID);
         verify(orderRepository, times(1)).save(order);
+        verify(orderItemRepository, times(0)).deleteAllByOrderId(ORDER_ID);
+        verify(orderItemRepository, times(0)).saveAll(any(List.class));
+    }
+
+    @Test
+    void updateOrderSuccessTest_withOrderItems() {
+        List<UpdateOrderItemDto> updateOrderItemList = List.of(new UpdateOrderItemDto());
+        UpdateOrderDto updateOrderDto = buildUpdateOrderDto();
+        updateOrderDto.setOrderItems(updateOrderItemList);
+
+        Order order = buildOrder();
+        List<OrderItem> orderItemList = List.of(new OrderItem());
+
+        when(orderRepository.findById(ORDER_ID)).thenReturn(Optional.of(order));
+        when(orderItemMapper.updateOrderItemDtoListToOrderItemList(updateOrderItemList)).thenReturn(orderItemList);
+
+        orderService.updateOrder(ORDER_ID, updateOrderDto);
+
+        verify(orderRepository, times(1)).findById(ORDER_ID);
+        verify(orderRepository, times(1)).save(order);
+        verify(orderItemRepository, times(1)).deleteAllByOrderId(ORDER_ID);
+        verify(orderItemRepository, times(1)).saveAll(orderItemList);
     }
 
     @Test
