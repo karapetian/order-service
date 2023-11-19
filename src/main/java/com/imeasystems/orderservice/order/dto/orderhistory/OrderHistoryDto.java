@@ -17,4 +17,9 @@ public class OrderHistoryDto {
 
     @NotNull
     private OrderStatus orderStatus;
+
+    public OrderHistoryDto(Long orderId, OrderStatus orderStatus) {
+        this.orderId = orderId;
+        this.orderStatus = orderStatus;
+    }
 }

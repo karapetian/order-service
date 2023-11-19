@@ -7,6 +7,7 @@ import com.imeasystems.orderservice.order.dto.CreateOrderDto;
 import com.imeasystems.orderservice.order.dto.OrderDto;
 import com.imeasystems.orderservice.order.dto.OrderResponse;
 import com.imeasystems.orderservice.order.dto.UpdateOrderDto;
+import com.imeasystems.orderservice.order.dto.orderhistory.OrderHistoryDto;
 import com.imeasystems.orderservice.order.dto.orderitem.UpdateOrderItemDto;
 import com.imeasystems.orderservice.order.entity.Order;
 import com.imeasystems.orderservice.order.entity.OrderHistory;
@@ -36,6 +37,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.times;
@@ -107,7 +109,7 @@ class OrderServiceImplTest {
     @Test
     void getOrderSuccessTest() {
         Order order = new Order();
-        OrderDto expectedOrderDto = buildOrderDto1();
+        OrderDto expectedOrderDto = buildOrderDto();
 
         when(orderRepository.findById(ORDER_ID)).thenReturn(Optional.of(order));
         when(orderMapper.orderToOrderDto(order)).thenReturn(expectedOrderDto);
@@ -137,8 +139,9 @@ class OrderServiceImplTest {
     @Test
     void getAllOrdersSuccessTest() {
         PageRequest pageRequest = buildPageDto();
+        OrderDto orderDto = buildOrderDto();
         List<Order> orders = List.of(buildOrder());
-        List<OrderDto> orderDtos = List.of(buildOrderDto1());
+        List<OrderDto> orderDtos = List.of(orderDto);
         Page<Order> orderPage = new PageImpl<>(orders);
 
         when(orderRepository.findAll(any(PageRequest.class))).thenReturn(orderPage);
@@ -158,11 +161,11 @@ class OrderServiceImplTest {
 
         List<OrderDto> orderSearchResult = orderResponse.getOrders();
         OrderDto orderDtoSearchResult = orderSearchResult.get(0);
-        assertEquals(buildOrderDto1().getId(), orderDtoSearchResult.getId());
-        assertEquals(buildOrderDto1().getCurrentStatus(), orderDtoSearchResult.getCurrentStatus());
-        assertEquals(buildOrderDto1().getShippingAddress(), orderDtoSearchResult.getShippingAddress());
-        assertEquals(buildOrderDto1().getPaymentDetails(), orderDtoSearchResult.getPaymentDetails());
-        assertEquals(buildOrderDto1().getCustomer().getName(), orderDtoSearchResult.getCustomer().getName());
+        assertEquals(orderDto.getId(), orderDtoSearchResult.getId());
+        assertEquals(orderDto.getCurrentStatus(), orderDtoSearchResult.getCurrentStatus());
+        assertEquals(orderDto.getShippingAddress(), orderDtoSearchResult.getShippingAddress());
+        assertEquals(orderDto.getPaymentDetails(), orderDtoSearchResult.getPaymentDetails());
+        assertEquals(orderDto.getCustomer().getName(), orderDtoSearchResult.getCustomer().getName());
     }
 
     @Test
@@ -249,7 +252,42 @@ class OrderServiceImplTest {
         assertThrows(EntityNotFoundException.class, () -> orderService.deleteOrder(ORDER_ID));
     }
 
-    private OrderDto buildOrderDto1() {
+    @Test
+    void getOrderHistoriesSuccessTest() {
+        Order order = buildOrder();
+        List<OrderHistory> orderHistories = List.of(
+                new OrderHistory(order, OrderStatus.PENDING),
+                new OrderHistory(order, OrderStatus.PROCESSING),
+                new OrderHistory(order, OrderStatus.CANCELED)
+        );
+
+        List<OrderHistoryDto> orderHistoryDtos = List.of(
+                new OrderHistoryDto(ORDER_ID, OrderStatus.PENDING),
+                new OrderHistoryDto(ORDER_ID, OrderStatus.PROCESSING),
+                new OrderHistoryDto(ORDER_ID, OrderStatus.CANCELED)
+        );
+
+        when(orderHistoryRepository.findAllByOrderId(ORDER_ID)).thenReturn(orderHistories);
+        when(orderHistoryMapper.orderHistoryListToOrderHistoryDtoList(orderHistories)).thenReturn(orderHistoryDtos);
+
+        List<OrderHistoryDto> resultOrderHistories = orderService.getOrderHistories(ORDER_ID);
+
+        verify(orderHistoryMapper, times(1)).orderHistoryListToOrderHistoryDtoList(orderHistories);
+        assertEquals(orderHistoryDtos, resultOrderHistories);
+        assertEquals(3, resultOrderHistories.size());
+    }
+
+    @Test
+    void getOrderHistoriesFailedTest() {
+        when(orderHistoryRepository.findAllByOrderId(ORDER_ID)).thenReturn(Collections.emptyList());
+
+        List<OrderHistoryDto> orderHistories = orderService.getOrderHistories(ORDER_ID);
+
+        verify(orderHistoryRepository, times(1)).findAllByOrderId(ORDER_ID);
+        assertTrue(orderHistories.isEmpty());
+    }
+
+    private OrderDto buildOrderDto() {
         return new OrderDto(ORDER_ID, buildCustomerDto(), OrderStatus.PENDING, Collections.emptyList(), ADDRESS,
                 DETAILS, null, null, null, null);
     }
