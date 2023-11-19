@@ -107,7 +107,7 @@ class OrderServiceImplTest {
 
         assertNotNull(expectedOrderDto);
         assertEquals(expectedOrderDto.getId(), actualOrderDto.getId());
-        assertEquals(expectedOrderDto.getStatus(), actualOrderDto.getStatus());
+        assertEquals(expectedOrderDto.getCurrentStatus(), actualOrderDto.getCurrentStatus());
         assertEquals(expectedOrderDto.getPaymentDetails(), actualOrderDto.getPaymentDetails());
         assertEquals(expectedOrderDto.getCustomer().getName(), actualOrderDto.getCustomer().getName());
         assertEquals(expectedOrderDto.getCustomer().getPhoneNumber(), actualOrderDto.getCustomer().getPhoneNumber());
@@ -147,7 +147,7 @@ class OrderServiceImplTest {
         List<OrderDto> orderSearchResult = orderResponse.getOrders();
         OrderDto orderDtoSearchResult = orderSearchResult.get(0);
         assertEquals(buildOrderDto1().getId(), orderDtoSearchResult.getId());
-        assertEquals(buildOrderDto1().getStatus(), orderDtoSearchResult.getStatus());
+        assertEquals(buildOrderDto1().getCurrentStatus(), orderDtoSearchResult.getCurrentStatus());
         assertEquals(buildOrderDto1().getShippingAddress(), orderDtoSearchResult.getShippingAddress());
         assertEquals(buildOrderDto1().getPaymentDetails(), orderDtoSearchResult.getPaymentDetails());
         assertEquals(buildOrderDto1().getCustomer().getName(), orderDtoSearchResult.getCustomer().getName());
@@ -224,7 +224,7 @@ class OrderServiceImplTest {
     private Order buildOrder() {
         Order order = new Order();
         order.setId(ORDER_ID);
-        order.setStatus(OrderStatus.PENDING);
+        order.setCurrentStatus(OrderStatus.PENDING);
         order.setPaymentDetails(DETAILS);
         order.setShippingAddress(ADDRESS);
         return order;

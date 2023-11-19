@@ -1,5 +1,5 @@
 ## Intro
-Order-Service is a Spring Boot application.
+Order-Service is a Spring Boot application.   
 The technology stack involves Java 17, Maven, Spring Data.   
 For data storing h2 embedded DB is used.  
 For mapping entities and Dtos mapstruct lib is used.  
@@ -9,6 +9,9 @@ The main domain is the Order object.
 There are also Customer and OrderItem.  
 
 ## How to Run?
+Turn on you Docker. IF you don't have Docker installed and/or want to run without it,      
+then comment out _docker-maven-plugin_ in pom.xml. 
+
 1. Run through IntelliJ IDEA
 
 2. From the root directory run _mvn clean install_     

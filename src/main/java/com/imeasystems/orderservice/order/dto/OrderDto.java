@@ -19,7 +19,7 @@ public class OrderDto {
 
     private CustomerDto customer;
 
-    private OrderStatus status;
+    private OrderStatus currentStatus;
 
     private List<OrderItemDto> orderItems;
 

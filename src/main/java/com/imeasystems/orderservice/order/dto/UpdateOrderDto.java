@@ -16,7 +16,7 @@ public class UpdateOrderDto {
 
     private Long customerId;
 
-    private OrderStatus status;
+    private OrderStatus currentStatus;
 
     private List<UpdateOrderItemDto> orderItems;
 

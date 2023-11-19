@@ -52,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new EntityNotFoundException("Customer with id " + createOrderDto.getCustomerId() + " not found"));
 
         order.setCustomer(customer);
-        order.setStatus(OrderStatus.PENDING);
+        order.setCurrentStatus(OrderStatus.PENDING);
         Order savedOrder = orderRepository.save(order);
 
         //save orderItems
@@ -104,8 +104,8 @@ public class OrderServiceImpl implements OrderService {
             Customer customer = customerRepository.getReferenceById(updateOrderDto.getCustomerId());
             order.setCustomer(customer);
         }
-        if (Objects.nonNull(updateOrderDto.getStatus())) {
-            order.setStatus(updateOrderDto.getStatus());
+        if (Objects.nonNull(updateOrderDto.getCurrentStatus())) {
+            order.setCurrentStatus(updateOrderDto.getCurrentStatus());
         }
         if (Objects.nonNull(updateOrderDto.getShippingAddress())) {
             order.setShippingAddress(updateOrderDto.getShippingAddress());

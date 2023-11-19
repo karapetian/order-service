@@ -38,12 +38,15 @@ public class Order {
     @JoinColumn(name = "customerId", nullable = false)
     private Customer customer;
 
-    @Column(name = "status")
+    @Column(name = "currentStatus")
     @Enumerated(EnumType.STRING)
-    private OrderStatus status;
+    private OrderStatus currentStatus;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "order", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<OrderHistory> histories = new ArrayList<>();
 
     @Column(name = "shippingAddress")
     private String shippingAddress;
