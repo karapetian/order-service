@@ -33,7 +33,6 @@ public class OrderHistory {
     @JoinColumn(name = "orderId", nullable = false)
     private Order order;
 
-    @NotNull
     @CreationTimestamp
     @Column(name = "modifiedDate")
     private LocalDateTime modifiedDate;

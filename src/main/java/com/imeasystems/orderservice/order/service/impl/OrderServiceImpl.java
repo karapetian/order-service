@@ -152,6 +152,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderHistoryDto> getOrderHistories(Long orderId) {
         List<OrderHistory> allByOrderId = orderHistoryRepository.findAllByOrderId(orderId);
+        log.info("Got {} orderHistories for orderId:{}", allByOrderId.size(), orderId);
         return orderHistoryMapper.orderHistoryListToOrderHistoryDtoList(allByOrderId);
     }
 

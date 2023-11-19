@@ -10,6 +10,9 @@ import java.time.LocalDateTime;
 public class OrderHistoryDto {
 
     @NotNull
+    private Long id;
+
+    @NotNull
     private Long orderId;
 
     @NotNull
