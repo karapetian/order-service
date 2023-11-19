@@ -6,11 +6,15 @@ import com.imeasystems.orderservice.order.dto.CreateOrderDto;
 import com.imeasystems.orderservice.order.dto.OrderDto;
 import com.imeasystems.orderservice.order.dto.OrderResponse;
 import com.imeasystems.orderservice.order.dto.UpdateOrderDto;
+import com.imeasystems.orderservice.order.dto.orderhistory.OrderHistoryDto;
 import com.imeasystems.orderservice.order.dto.orderitem.OrderItemDto;
 import com.imeasystems.orderservice.order.entity.Order;
+import com.imeasystems.orderservice.order.entity.OrderHistory;
 import com.imeasystems.orderservice.order.entity.OrderItem;
+import com.imeasystems.orderservice.order.mapper.OrderHistoryMapper;
 import com.imeasystems.orderservice.order.mapper.OrderItemMapper;
 import com.imeasystems.orderservice.order.mapper.OrderMapper;
+import com.imeasystems.orderservice.order.repository.OrderHistoryRepository;
 import com.imeasystems.orderservice.order.repository.OrderItemRepository;
 import com.imeasystems.orderservice.order.repository.OrderRepository;
 import com.imeasystems.orderservice.order.service.OrderService;
@@ -37,10 +41,14 @@ public class OrderServiceImpl implements OrderService {
     private final CustomerRepository customerRepository;
 
     private final OrderItemRepository orderItemRepository;
-    
+
+    private final OrderHistoryRepository orderHistoryRepository;
+
     private final OrderMapper orderMapper;
 
     private final OrderItemMapper orderItemMapper;
+
+    private final OrderHistoryMapper orderHistoryMapper;
 
     @Transactional
     @Override
@@ -59,6 +67,10 @@ public class OrderServiceImpl implements OrderService {
         List<OrderItem> orderItems = order.getOrderItems();
         orderItems.forEach(item -> item.setOrder(savedOrder));
         List<OrderItem> savedItems = orderItemRepository.saveAll(orderItems);
+
+        //save OrderHistory
+        OrderHistory currentState = new OrderHistory(savedOrder, savedOrder.getCurrentStatus());
+        orderHistoryRepository.save(currentState);
 
         //map to dtos
         List<OrderItemDto> itemDtos = orderItemMapper.orderItemListToOrderItemDtoList(savedItems);
@@ -106,6 +118,8 @@ public class OrderServiceImpl implements OrderService {
         }
         if (Objects.nonNull(updateOrderDto.getCurrentStatus())) {
             order.setCurrentStatus(updateOrderDto.getCurrentStatus());
+            OrderHistory currentState = new OrderHistory(order, updateOrderDto.getCurrentStatus());
+            orderHistoryRepository.save(currentState);
         }
         if (Objects.nonNull(updateOrderDto.getShippingAddress())) {
             order.setShippingAddress(updateOrderDto.getShippingAddress());
@@ -133,6 +147,12 @@ public class OrderServiceImpl implements OrderService {
         Order customer = findOrderById(id);
         orderRepository.delete(customer);
         log.info("Successfully deleted Order and OrderItems with orderId:{}", id);
+    }
+
+    @Override
+    public List<OrderHistoryDto> getOrderHistories(Long orderId) {
+        List<OrderHistory> allByOrderId = orderHistoryRepository.findAllByOrderId(orderId);
+        return orderHistoryMapper.orderHistoryListToOrderHistoryDtoList(allByOrderId);
     }
 
     private Order findOrderById(Long id) {

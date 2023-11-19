@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 public class OrderHistory {
 
@@ -40,4 +42,9 @@ public class OrderHistory {
     @Enumerated(EnumType.STRING)
     @Column(name = "orderStatus")
     private OrderStatus orderStatus;
+
+    public OrderHistory(Order order, OrderStatus orderStatus) {
+        this.order = order;
+        this.orderStatus = orderStatus;
+    }
 }

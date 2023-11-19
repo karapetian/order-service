@@ -4,6 +4,7 @@ import com.imeasystems.orderservice.order.dto.CreateOrderDto;
 import com.imeasystems.orderservice.order.dto.OrderDto;
 import com.imeasystems.orderservice.order.dto.OrderResponse;
 import com.imeasystems.orderservice.order.dto.UpdateOrderDto;
+import com.imeasystems.orderservice.order.dto.orderhistory.OrderHistoryDto;
 import com.imeasystems.orderservice.order.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -25,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Validated
 @RestController
@@ -89,5 +92,15 @@ public class OrderController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();
+    }
+
+    @Operation(summary = "Get the history of the Order")
+    @GetMapping("/{id}/history")
+    public ResponseEntity<List<OrderHistoryDto>> getOrderHistory(@Valid @NotNull @Positive @PathVariable final Long id) {
+        List<OrderHistoryDto> orderHistories = orderService.getOrderHistories(id);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(orderHistories);
     }
 }
