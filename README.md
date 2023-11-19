@@ -4,9 +4,10 @@ The technology stack involves Java 17, Maven, Spring Data.
 For data storing h2 embedded DB is used.  
 For mapping entities and Dtos mapstruct lib is used.  
 Unit tests and integration test is present.  
+The application is Dockerized.
 
 The main domain is the Order object.  
-There are also Customer and OrderItem.  
+There are also Customer, OrderItem and OrderHistory.
 
 ## How to Run?
 Turn on you Docker. IF you don't have Docker installed and/or want to run without it,      
