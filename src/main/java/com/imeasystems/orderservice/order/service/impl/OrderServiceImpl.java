@@ -69,7 +69,7 @@ public class OrderServiceImpl implements OrderService {
         List<OrderItem> savedItems = orderItemRepository.saveAll(orderItems);
 
         //save OrderHistory
-        OrderHistory currentState = new OrderHistory(savedOrder, savedOrder.getCurrentStatus());
+        OrderHistory currentState = new OrderHistory(savedOrder, order.getCurrentStatus());
         orderHistoryRepository.save(currentState);
 
         //map to dtos

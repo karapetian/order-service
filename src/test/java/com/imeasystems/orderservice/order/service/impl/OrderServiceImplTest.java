@@ -9,9 +9,12 @@ import com.imeasystems.orderservice.order.dto.OrderResponse;
 import com.imeasystems.orderservice.order.dto.UpdateOrderDto;
 import com.imeasystems.orderservice.order.dto.orderitem.UpdateOrderItemDto;
 import com.imeasystems.orderservice.order.entity.Order;
+import com.imeasystems.orderservice.order.entity.OrderHistory;
 import com.imeasystems.orderservice.order.entity.OrderItem;
+import com.imeasystems.orderservice.order.mapper.OrderHistoryMapper;
 import com.imeasystems.orderservice.order.mapper.OrderItemMapper;
 import com.imeasystems.orderservice.order.mapper.OrderMapper;
+import com.imeasystems.orderservice.order.repository.OrderHistoryRepository;
 import com.imeasystems.orderservice.order.repository.OrderItemRepository;
 import com.imeasystems.orderservice.order.repository.OrderRepository;
 import com.imeasystems.orderservice.order.util.OrderStatus;
@@ -34,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -54,10 +58,16 @@ class OrderServiceImplTest {
     private CustomerRepository customerRepository;
 
     @Mock
+    private OrderHistoryRepository orderHistoryRepository;
+
+    @Mock
     private OrderMapper orderMapper;
 
     @Mock
     private OrderItemMapper orderItemMapper;
+
+    @Mock
+    private OrderHistoryMapper orderHistoryMapper;
 
     private static final Long ORDER_ID = 90001L;
 
@@ -90,6 +100,8 @@ class OrderServiceImplTest {
         verify(orderRepository, times(1)).save(order);
         verify(orderItemRepository, times(1)).saveAll(any(List.class));
         verify(customerRepository, times(1)).findById(CUSTOMER_ID);
+        verify(orderHistoryRepository, times(1)).save(
+                refEq(new OrderHistory(savedOrder, OrderStatus.PENDING)));
     }
 
     @Test
@@ -166,6 +178,8 @@ class OrderServiceImplTest {
         verify(orderRepository, times(1)).save(order);
         verify(orderItemRepository, times(0)).deleteAllByOrderId(ORDER_ID);
         verify(orderItemRepository, times(0)).saveAll(any(List.class));
+        verify(orderHistoryRepository, times(1)).save(
+                refEq(new OrderHistory(order, OrderStatus.PROCESSING)));
     }
 
     @Test
@@ -186,6 +200,25 @@ class OrderServiceImplTest {
         verify(orderRepository, times(1)).save(order);
         verify(orderItemRepository, times(1)).deleteAllByOrderId(ORDER_ID);
         verify(orderItemRepository, times(1)).saveAll(orderItemList);
+        verify(orderHistoryRepository, times(1)).save(
+                refEq(new OrderHistory(order, OrderStatus.PROCESSING)));
+    }
+
+    @Test
+    void updateOrderSuccessTest_withoutStatusChange() {
+        UpdateOrderDto updateOrderDto = buildUpdateOrderDto();
+        updateOrderDto.setCurrentStatus(null);
+        Order order = buildOrder();
+
+        when(orderRepository.findById(ORDER_ID)).thenReturn(Optional.of(order));
+
+        orderService.updateOrder(ORDER_ID, updateOrderDto);
+
+        verify(orderRepository, times(1)).findById(ORDER_ID);
+        verify(orderRepository, times(1)).save(order);
+        verify(orderItemRepository, times(0)).deleteAllByOrderId(ORDER_ID);
+        verify(orderItemRepository, times(0)).saveAll(any(List.class));
+        verify(orderHistoryRepository, times(0)).save(any(OrderHistory.class));
     }
 
     @Test
@@ -235,7 +268,7 @@ class OrderServiceImplTest {
     }
 
     private UpdateOrderDto buildUpdateOrderDto() {
-        return new UpdateOrderDto(CUSTOMER_ID, OrderStatus.PENDING, Collections.emptyList(), ADDRESS,
+        return new UpdateOrderDto(CUSTOMER_ID, OrderStatus.PROCESSING, Collections.emptyList(), ADDRESS,
                 DETAILS, null, null, null);
     }
 
