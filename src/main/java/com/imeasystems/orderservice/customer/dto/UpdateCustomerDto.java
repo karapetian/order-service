@@ -18,6 +18,6 @@ public class UpdateCustomerDto {
     @Email(regexp = "^(.+)@(.+)$")
     private String email;
 
-    @Pattern(regexp = "^\\+{0,1}[0-9]{8,}$")
+    @Pattern(regexp = "^\\+{0,1}[0-9]{8,20}$")
     private String phoneNumber;
 }
