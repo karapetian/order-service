@@ -1,5 +1,6 @@
 package com.imeasystems.orderservice.customer.controller;
 
+import com.imeasystems.orderservice.MYSQLInitializer;
 import com.imeasystems.orderservice.customer.dto.CreateCustomerDto;
 import com.imeasystems.orderservice.customer.dto.CustomerDto;
 import com.imeasystems.orderservice.customer.dto.CustomerResponse;
@@ -13,8 +14,10 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 import java.util.Map;
@@ -26,8 +29,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
+@Testcontainers
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ContextConfiguration(initializers = {MYSQLInitializer.class})
 class CustomerControllerIntegrationTest {
 
     @Autowired
