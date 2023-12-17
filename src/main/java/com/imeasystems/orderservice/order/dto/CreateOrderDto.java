@@ -1,6 +1,7 @@
 package com.imeasystems.orderservice.order.dto;
 
 import com.imeasystems.orderservice.order.dto.orderitem.CreateOrderItemDto;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.List;
 public class CreateOrderDto {
 
     @NotNull
+    @Min(1)
     private Long customerId;
 
     @NotEmpty
