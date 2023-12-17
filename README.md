@@ -9,24 +9,26 @@ The application is Dockerized.
 The main domain is the Order object.  
 There are also Customer, OrderItem and OrderHistory.
 
-## How to Run?
-Turn on you Docker. IF you don't have Docker installed and/or want to run without it,      
-then comment out _docker-maven-plugin_ in pom.xml. 
+## How to run?
+1. For local run you should install locally MySQL Server. Enter a password for the 'root' user ('Strong.Pwd-123').  
+But you cannot use 'mysql' command directly (only with the whole path '/usr/local/mysql-8.2.0-macos13-x86_64/bin/mysql --version').  
+On your local machine set its path ('/usr/local/mysql-8.2.0-macos13-x86_64/bin') as an env var and export it.  
+  ` mysql -u root -p Strong.Pwd-123`  
+   `CREATE DATABASE ordersdb;`  
+   `show databases;`  
+   `CREATE USER 'user'@'localhost' IDENTIFIED BY 'Strong.Pwd-123';`    
+   `GRANT ALL PRIVILEGES ON * . * TO 'user'@'localhost';`
+   `FLUSH PRIVILEGES;`   
+   `select user from mysql.user;`   
 
-1. Run through IntelliJ IDEA
+2. When building the application docker plugin will generate a docker image from the Dockerfile.   
+   After the successful build from the root directory run the image with _docker-compose up_   
+   Container's 8090 port will be mapped to th 8090 on the host machine.  
 
-2. From the root directory run _mvn clean install_     
-After the successful build run _java -jar target/order-service.jar_   
-
-3. When building the application docker plugin will generate a docker image from the Dockerfile.   
-After the successful build from the root directory run the image with _docker-compose up_   
-Container's 8090 port will be mapped to th 8090 on the host machine. 
-
-## DB
-H2 console: http://localhost:8090/imea-systems/h2-console   
-JDBC URL: jdbc:h2:mem:imeasystems     
-username: sa        
-password: Strong.Pwd-123
+## Connect to DB
+DB_URI: jdbc:mysql://localhost:3306/ordersDB   
+DB_USER: user   
+DB_PASSWORD: Strong.Pwd-123   
 
 ## Endpoints
 OpenApi endpoint: http://localhost:8090/imea-systems/swagger-ui/index.html#

@@ -10,3 +10,23 @@ services:
       - "8090:8090"
     expose:
       - "8090"
+    environment:
+      DB_URI: jdbc:mysql://order-db:3306/ordersDB
+      DB_USER: user
+      DB_PASSWORD: Strong.Pwd-123
+      MYSQL_HOST: order-db
+    depends_on: [db]
+
+  db:
+    image: mysql
+    container_name: order-db
+    restart: always
+    environment:
+      - MYSQL_DATABASE=ordersDB
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=Strong.Pwd-123
+      - MYSQL_ROOT_PASSWORD=Strong.Pwd-123
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
