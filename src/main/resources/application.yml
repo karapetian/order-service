@@ -12,14 +12,16 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
-    database-platform: org.hibernate.dialect.H2Dialect
+      ddl-auto: none
     properties:
       hibernate:
         show_sql: true
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
     open-in-view: false
+  sql:
+    init:
+      mode: always
 logging:
   level:
     root: INFO
